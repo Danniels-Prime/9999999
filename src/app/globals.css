@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  /* Cosmic color palette */
+  --color-void: #060612;
+  --color-nebula: #0d0d2b;
+  --color-stardust: #1e1e3f;
+  --color-aurora-start: #7c3aed;
+  --color-aurora-end: #06b6d4;
+  --color-starlight: #e2e8f0;
+  --color-comet: #94a3b8;
+  --color-supernova: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  --background: #060612;
+  --foreground: #e2e8f0;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+* {
+  border-color: #1e1e3f;
+}
+
+::selection {
+  background: #7c3aed40;
+  color: #e2e8f0;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #060612;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e1e3f;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7c3aed60;
+}
