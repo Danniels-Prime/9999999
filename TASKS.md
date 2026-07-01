@@ -37,19 +37,28 @@
 
 ---
 
-## 🚧 Current Sprint — Branch 4: Flashcards / SRS
+## ✅ Done — Branch 4: Flashcards / SRS
 
-- [ ] SM-2 algorithm (`src/lib/srs/sm2.ts`)
-- [ ] Daily review queue — due cards only
-- [ ] Flashcard UI with flip animation
-- [ ] Review result POST → SM-2 update to `user_vocabulary`
+- [x] SM-2 algorithm (`src/lib/srs/sm2.ts`)
+- [x] Daily review queue — due cards only (`src/lib/supabase/flashcards.ts`)
+- [x] Flashcard UI with flip animation (`src/components/flashcards/`)
+- [x] Review result POST → SM-2 update to `user_vocabulary` (`/api/flashcards/[id]/review`)
+- [x] Flashcards page at `/flashcards` + nav link + dashboard card active
 - [ ] Live end-to-end verification (blocked until environment allows *.supabase.co outbound)
+
+---
+
+## 🚧 Current Sprint — Branch 5: Voice
+
+- [ ] Browser STT integration (Web Speech API)
+- [ ] TTS for Claude responses
+- [ ] Voice conversation mode UI
 
 ---
 
 ## 📋 Backlog
 
-### Branch 5: Voice
+### Branch 5: Voice (moved to current sprint above)
 - [ ] Browser STT integration (Web Speech API)
 - [ ] TTS for Claude responses
 - [ ] Voice conversation mode UI

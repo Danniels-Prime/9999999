@@ -28,6 +28,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/vocabulary" className="text-sm text-comet hover:text-starlight transition-colors">
             Vocabulary
           </Link>
+          <Link href="/flashcards" className="text-sm text-comet hover:text-starlight transition-colors">
+            Flashcards
+          </Link>
           <span className="text-sm text-comet">{user.email}</span>
         </div>
       </nav>

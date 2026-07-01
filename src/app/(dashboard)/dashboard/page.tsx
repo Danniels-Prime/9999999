@@ -20,9 +20,9 @@ const features = [
   {
     title: 'Flashcards',
     description: 'Spaced repetition to lock in everything you learn.',
-    status: 'Coming soon',
-    statusColor: 'text-comet',
-    href: null,
+    status: 'Open →',
+    statusColor: 'text-aurora-end',
+    href: '/flashcards',
   },
   {
     title: 'Voice Practice',
