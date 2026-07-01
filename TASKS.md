@@ -12,15 +12,26 @@
 
 ---
 
-## 🚧 Current Sprint — Branch 2: AI Chat
+## ✅ Done — Branch 2: AI Chat
 
-- [ ] Anthropic client with streaming helper (`src/lib/anthropic/client.ts`)
-- [ ] POST `/api/chat` streaming endpoint
-- [ ] Chat session DB operations (create, list, get with messages)
-- [ ] Chat UI: message thread, streaming message render, input bar
-- [ ] Session list sidebar
-- [ ] Language selector component
-- [ ] Claude system prompt: language tutor persona
+- [x] Anthropic client with streaming helper (`src/lib/anthropic/client.ts`)
+- [x] POST `/api/chat` streaming endpoint
+- [x] Chat session DB operations (`src/lib/supabase/chat.ts`)
+- [x] Chat UI: message thread, streaming message render, input bar (`src/components/chat/ChatInterface.tsx`)
+- [x] Session list sidebar (built into ChatInterface)
+- [x] Language selector component (`src/components/chat/LanguageSelector.tsx`)
+- [x] Claude system prompt: language tutor persona (`src/lib/anthropic/client.ts`)
+- [x] Multi-language support: 15 languages from day one (`src/lib/languages.ts`)
+- [x] Dashboard AI Chat card now links to `/chat`
+
+---
+
+## 🚧 Current Sprint — Branch 3: Vocabulary DB
+
+- [ ] "Save word" button in chat (inline, one-click)
+- [ ] Claude-powered definition enrichment (async, background)
+- [ ] Vocabulary list page with language filter (`/vocabulary`)
+- [ ] Word detail page / modal
 
 ---
 
