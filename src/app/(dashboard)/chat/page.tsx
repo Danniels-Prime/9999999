@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Mic } from 'lucide-react'
 import { MessageThread } from '@/components/chat/MessageThread'
 import { ChatInput } from '@/components/chat/ChatInput'
 import { SessionSidebar } from '@/components/chat/SessionSidebar'
 import { LanguageSelector } from '@/components/chat/LanguageSelector'
+import { VoiceModePanel } from '@/components/voice/VoiceModePanel'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { LANGUAGE_NAMES } from '@/lib/languages'
@@ -27,6 +29,7 @@ export default function ChatPage() {
   const [error, setError] = useState<string | null>(null)
   const [newLanguage, setNewLanguage] = useState('es')
   const [creatingSession, setCreatingSession] = useState(false)
+  const [voiceMode, setVoiceMode] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -56,6 +59,7 @@ export default function ChatPage() {
   async function selectSession(session: ChatSession) {
     setActiveSession(session)
     setError(null)
+    setVoiceMode(false)
     setMessagesLoading(true)
 
     const res = await fetch(`/api/chat/sessions/${session.id}`)
@@ -89,16 +93,19 @@ export default function ChatPage() {
     setSessions((prev) => [session, ...prev])
     setActiveSession(session)
     setMessages([])
+    setVoiceMode(false)
   }
 
-  async function handleSend(content: string) {
-    if (!activeSession) return
+  async function handleSend(content: string): Promise<string> {
+    if (!activeSession) return ''
     setError(null)
     setSending(true)
 
     const userMessage: ThreadMessage = { id: `local-${Date.now()}-user`, role: 'user', content }
     const assistantId = `local-${Date.now()}-assistant`
     setMessages((prev) => [...prev, userMessage, { id: assistantId, role: 'assistant', content: '' }])
+
+    let assistantText = ''
 
     try {
       const res = await fetch('/api/chat', {
@@ -137,6 +144,7 @@ export default function ChatPage() {
             | { type: 'error'; message: string }
 
           if (payload.type === 'delta') {
+            assistantText += payload.text
             setMessages((prev) =>
               prev.map((m) => (m.id === assistantId ? { ...m, content: m.content + payload.text } : m))
             )
@@ -150,6 +158,8 @@ export default function ChatPage() {
     } finally {
       setSending(false)
     }
+
+    return assistantText
   }
 
   return (
@@ -188,26 +198,51 @@ export default function ChatPage() {
           <>
             <div className="flex items-center justify-between mb-2 px-1">
               <h1 className="font-semibold text-starlight truncate">{activeSession.title}</h1>
-              <span className="text-xs text-comet shrink-0 ml-2">
-                {LANGUAGE_NAMES[activeSession.languageCode] ?? activeSession.languageCode}
-              </span>
+              <div className="flex items-center gap-3 shrink-0 ml-2">
+                <span className="text-xs text-comet">
+                  {LANGUAGE_NAMES[activeSession.languageCode] ?? activeSession.languageCode}
+                </span>
+                <Button
+                  variant={voiceMode ? 'primary' : 'ghost'}
+                  size="sm"
+                  onClick={() => setVoiceMode((v) => !v)}
+                  aria-pressed={voiceMode}
+                  aria-label="Toggle voice mode"
+                >
+                  <Mic className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
-            {messagesLoading ? (
-              <div className="flex-1 flex items-center justify-center text-comet text-sm">
-                Loading conversation...
-              </div>
+            {voiceMode ? (
+              <VoiceModePanel
+                targetLanguageCode={activeSession.languageCode}
+                onSend={handleSend}
+                onExit={() => setVoiceMode(false)}
+              />
             ) : (
-              <MessageThread messages={messages} />
-            )}
+              <>
+                {messagesLoading ? (
+                  <div className="flex-1 flex items-center justify-center text-comet text-sm">
+                    Loading conversation...
+                  </div>
+                ) : (
+                  <MessageThread messages={messages} targetLanguageCode={activeSession.languageCode} />
+                )}
 
-            {error && (
-              <p className="text-xs text-danger mb-2" role="alert">
-                {error}
-              </p>
-            )}
+                {error && (
+                  <p className="text-xs text-danger mb-2" role="alert">
+                    {error}
+                  </p>
+                )}
 
-            <ChatInput onSend={handleSend} disabled={sending} />
+                <ChatInput
+                  onSend={handleSend}
+                  disabled={sending}
+                  targetLanguageCode={activeSession.languageCode}
+                />
+              </>
+            )}
           </>
         )}
       </div>
