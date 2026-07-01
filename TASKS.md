@@ -9,29 +9,16 @@
 - [x] Supabase SSR client library: client.ts, server.ts, middleware.ts
 - [x] Database migration: profiles, vocabulary_items, user_vocabulary, chat_sessions, chat_messages, item_embeddings (with RLS)
 - [x] Auth: sign-up page, sign-in page, callback route, middleware, dashboard skeleton
+- [x] Branch 2 — AI Chat: Anthropic streaming client, `/api/chat` + `/api/chat/sessions` (+`/:id`) routes, chat session DB helpers, chat UI (message thread, streaming render, input bar, session sidebar, language selector), tutor system prompt
+  - `npx tsc --noEmit` and `npm run build` pass clean
+  - **Not yet verified live** — this dev environment's network policy blocks `*.supabase.co` (403), same as the previous session, so sign-up/sign-in and live chat streaming have not been exercised end-to-end against real Supabase/Anthropic credentials yet
 
 ---
 
-## ✅ Done — Branch 2: AI Chat
+## 🚧 Current Sprint
 
-- [x] Anthropic client with streaming helper (`src/lib/anthropic/client.ts`)
-- [x] POST `/api/chat` streaming endpoint
-- [x] Chat session DB operations (`src/lib/supabase/chat.ts`)
-- [x] Chat UI: message thread, streaming message render, input bar (`src/components/chat/ChatInterface.tsx`)
-- [x] Session list sidebar (built into ChatInterface)
-- [x] Language selector component (`src/components/chat/LanguageSelector.tsx`)
-- [x] Claude system prompt: language tutor persona (`src/lib/anthropic/client.ts`)
-- [x] Multi-language support: 15 languages from day one (`src/lib/languages.ts`)
-- [x] Dashboard AI Chat card now links to `/chat`
-
----
-
-## 🚧 Current Sprint — Branch 3: Vocabulary DB
-
-- [ ] "Save word" button in chat (inline, one-click)
-- [ ] Claude-powered definition enrichment (async, background)
-- [ ] Vocabulary list page with language filter (`/vocabulary`)
-- [ ] Word detail page / modal
+- [ ] Live end-to-end verification of auth + chat (blocked until an environment with Supabase network access is available)
+- [ ] Branch 3: Vocabulary DB (see backlog below)
 
 ---
 

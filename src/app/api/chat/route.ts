@@ -1,63 +1,86 @@
-import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { getSessionMessages, createMessage } from '@/lib/supabase/chat'
-import { anthropic, CHAT_MODEL, buildSystemPrompt } from '@/lib/anthropic/client'
+import { getChatSession, getSessionMessages, insertChatMessage } from '@/lib/supabase/chat'
+import { streamChatCompletion } from '@/lib/anthropic/client'
 
-export async function POST(req: Request) {
+function jsonError(message: string, status: number) {
+  return new Response(JSON.stringify({ error: message }), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
+
+function sseEvent(data: unknown) {
+  return `data: ${JSON.stringify(data)}\n\n`
+}
+
+export async function POST(request: Request) {
   const supabase = await createClient()
   const {
     data: { user },
   } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { sessionId, message, languageCode } = await req.json()
-  if (!sessionId || !message) {
-    return NextResponse.json({ error: 'Missing sessionId or message' }, { status: 400 })
+  if (!user) {
+    return jsonError('Unauthorized', 401)
   }
 
-  // Persist user message first
-  await createMessage(supabase, sessionId, 'user', message)
+  const body = await request.json().catch(() => null)
+  const sessionId = body?.sessionId
+  const message = body?.message
+  const targetLanguage = body?.targetLanguage
 
-  // Build context from last 20 messages (now includes the one we just saved)
-  const history = await getSessionMessages(supabase, sessionId)
-  const messages = history.slice(-20).map((m) => ({
-    role: m.role as 'user' | 'assistant',
-    content: m.content,
-  }))
+  if (
+    typeof sessionId !== 'string' ||
+    typeof message !== 'string' ||
+    !message.trim() ||
+    typeof targetLanguage !== 'string'
+  ) {
+    return jsonError('Invalid request body', 400)
+  }
 
-  const systemPrompt = buildSystemPrompt(languageCode ?? 'es')
-  let fullContent = ''
+  const session = await getChatSession(supabase, user.id, sessionId)
+  if (!session) {
+    return jsonError('Not found', 404)
+  }
 
-  const stream = new ReadableStream({
+  const priorMessages = await getSessionMessages(supabase, sessionId)
+  await insertChatMessage(supabase, sessionId, 'user', message)
+
+  const encoder = new TextEncoder()
+
+  const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
+      let fullResponse = ''
       try {
-        const response = anthropic.messages.stream({
-          model: CHAT_MODEL,
-          max_tokens: 1024,
-          system: systemPrompt,
-          messages,
-        })
+        const history = [
+          ...priorMessages.map((m) => ({ role: m.role, content: m.content })),
+          { role: 'user' as const, content: message },
+        ]
 
-        for await (const event of response) {
-          if (
-            event.type === 'content_block_delta' &&
-            event.delta.type === 'text_delta'
-          ) {
-            const text = event.delta.text
-            fullContent += text
-            controller.enqueue(new TextEncoder().encode(text))
-          }
+        for await (const chunk of streamChatCompletion(history, targetLanguage)) {
+          fullResponse += chunk
+          controller.enqueue(encoder.encode(sseEvent({ type: 'delta', text: chunk })))
         }
 
-        await createMessage(supabase, sessionId, 'assistant', fullContent)
+        if (fullResponse.trim()) {
+          await insertChatMessage(supabase, sessionId, 'assistant', fullResponse)
+        }
+        controller.enqueue(encoder.encode(sseEvent({ type: 'done' })))
+      } catch (error) {
+        console.error('Chat stream failed:', error)
+        controller.enqueue(
+          encoder.encode(sseEvent({ type: 'error', message: 'Failed to generate a response.' }))
+        )
+      } finally {
         controller.close()
-      } catch (e) {
-        controller.error(e)
       }
     },
   })
 
   return new Response(stream, {
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache, no-transform',
+      Connection: 'keep-alive',
+    },
   })
 }

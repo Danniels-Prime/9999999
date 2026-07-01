@@ -1,6 +1,6 @@
 'use client'
 
-import { LANGUAGES } from '@/lib/languages'
+import { SUPPORTED_LANGUAGES } from '@/lib/languages'
 import { cn } from '@/lib/utils'
 
 interface LanguageSelectorProps {
@@ -17,15 +17,15 @@ export function LanguageSelector({ value, onChange, disabled, className }: Langu
       onChange={(e) => onChange(e.target.value)}
       disabled={disabled}
       className={cn(
-        'bg-stardust border border-stardust rounded-lg px-3 py-2 text-sm text-starlight',
-        'focus:outline-none focus:ring-2 focus:ring-aurora-start',
+        'px-4 py-2.5 rounded-xl bg-nebula border border-stardust text-starlight text-sm',
+        'outline-none focus:border-aurora-start focus:ring-1 focus:ring-aurora-start/30',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         className
       )}
     >
-      {LANGUAGES.map((lang) => (
-        <option key={lang.code} value={lang.code}>
-          {lang.flag} {lang.name}
+      {SUPPORTED_LANGUAGES.map((language) => (
+        <option key={language.code} value={language.code}>
+          {language.flag} {language.name}
         </option>
       ))}
     </select>
