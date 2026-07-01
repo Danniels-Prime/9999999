@@ -48,20 +48,17 @@
 
 ---
 
-## 🚧 Current Sprint — Branch 5: Voice
+## ✅ Done — Branch 5: Voice
 
-- [ ] Browser STT integration (Web Speech API)
-- [ ] TTS for Claude responses
-- [ ] Voice conversation mode UI
+- [x] BCP-47 locale map for Web Speech API (`LANGUAGE_LOCALES` / `getLanguageLocale()` in `src/lib/languages.ts`)
+- [x] Browser STT hook (`src/lib/voice/useSpeechRecognition.ts`) — dictation mic button embedded in `ChatInput`
+- [x] TTS hook (`src/lib/voice/useSpeechSynthesis.ts`) — speaker icon to read assistant replies aloud in `ChatMessage`
+- [x] Voice conversation mode UI (`src/components/voice/VoiceModePanel.tsx`, `MicButton`, `VoiceWaveform`) — hands-free listen → send → speak loop, toggled from the chat header
+- [ ] Live end-to-end verification with a real microphone/speaker (blocked in this sandbox: no mic hardware and outbound network to Supabase auth is denied by egress policy — verified via an isolated unauthenticated test route instead)
 
 ---
 
 ## 📋 Backlog
-
-### Branch 5: Voice (moved to current sprint above)
-- [ ] Browser STT integration (Web Speech API)
-- [ ] TTS for Claude responses
-- [ ] Voice conversation mode UI
 
 ### Branch 6: Knowledge Graph
 - [ ] pgvector embedding generation on vocabulary add

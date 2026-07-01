@@ -11,9 +11,10 @@ interface ThreadMessage {
 
 interface MessageThreadProps {
   messages: ThreadMessage[]
+  targetLanguageCode?: string
 }
 
-export function MessageThread({ messages }: MessageThreadProps) {
+export function MessageThread({ messages, targetLanguageCode }: MessageThreadProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -31,7 +32,12 @@ export function MessageThread({ messages }: MessageThreadProps) {
   return (
     <div className="flex-1 overflow-y-auto flex flex-col gap-3 px-1 py-4">
       {messages.map((message) => (
-        <ChatMessage key={message.id} role={message.role} content={message.content} />
+        <ChatMessage
+          key={message.id}
+          role={message.role}
+          content={message.content}
+          targetLanguageCode={targetLanguageCode}
+        />
       ))}
       <div ref={bottomRef} />
     </div>

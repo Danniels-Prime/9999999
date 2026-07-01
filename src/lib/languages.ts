@@ -30,3 +30,27 @@ export const LANGUAGE_NAMES: Record<string, string> = Object.fromEntries(
 export function getLanguageName(code: string): string {
   return LANGUAGE_NAMES[code] ?? code
 }
+
+// BCP-47 locales for the Web Speech API (SpeechRecognition + SpeechSynthesis)
+export const LANGUAGE_LOCALES: Record<string, string> = {
+  es: 'es-ES',
+  fr: 'fr-FR',
+  de: 'de-DE',
+  it: 'it-IT',
+  pt: 'pt-BR',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+  zh: 'zh-CN',
+  ru: 'ru-RU',
+  ar: 'ar-SA',
+  nl: 'nl-NL',
+  sv: 'sv-SE',
+  pl: 'pl-PL',
+  tr: 'tr-TR',
+  hi: 'hi-IN',
+  en: 'en-US',
+}
+
+export function getLanguageLocale(code: string): string {
+  return LANGUAGE_LOCALES[code] ?? 'en-US'
+}
