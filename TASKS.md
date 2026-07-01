@@ -9,32 +9,45 @@
 - [x] Supabase SSR client library: client.ts, server.ts, middleware.ts
 - [x] Database migration: profiles, vocabulary_items, user_vocabulary, chat_sessions, chat_messages, item_embeddings (with RLS)
 - [x] Auth: sign-up page, sign-in page, callback route, middleware, dashboard skeleton
-- [x] Branch 2 — AI Chat: Anthropic streaming client, `/api/chat` + `/api/chat/sessions` (+`/:id`) routes, chat session DB helpers, chat UI (message thread, streaming render, input bar, session sidebar, language selector), tutor system prompt
-  - `npx tsc --noEmit` and `npm run build` pass clean
-  - **Not yet verified live** — this dev environment's network policy blocks `*.supabase.co` (403), same as the previous session, so sign-up/sign-in and live chat streaming have not been exercised end-to-end against real Supabase/Anthropic credentials yet
 
 ---
 
-## 🚧 Current Sprint
+## ✅ Done — Branch 2: AI Chat
 
-- [ ] Live end-to-end verification of auth + chat (blocked until an environment with Supabase network access is available)
-- [ ] Branch 3: Vocabulary DB (see backlog below)
+- [x] Anthropic client with streaming helper (`src/lib/anthropic/client.ts`)
+- [x] POST `/api/chat` SSE streaming endpoint
+- [x] Chat session DB operations (`src/lib/supabase/chat.ts`) with camelCase mapping
+- [x] Chat UI: MessageThread, ChatInput, SessionSidebar, LanguageSelector components
+- [x] Claude system prompt: language tutor persona
+- [x] Multi-language support: 16 languages (`src/lib/languages.ts`)
+- [x] Dashboard AI Chat card links to `/chat`
+
+---
+
+## ✅ Done — Branch 3: Vocabulary DB
+
+- [x] Claude-powered word enrichment (`src/lib/anthropic/enrich.ts`)
+- [x] POST/GET `/api/vocabulary` — save & list words
+- [x] Vocabulary DB helpers (`src/lib/supabase/vocabulary.ts`)
+- [x] SaveWordInput component — embedded in chat sidebar + vocabulary page
+- [x] Vocabulary list page with language filter tabs (`/vocabulary`)
+- [x] Word detail modal with all definitions + examples
+- [x] Dashboard Vocabulary card links to `/vocabulary`
+- [x] Nav updated with Vocabulary link
+
+---
+
+## 🚧 Current Sprint — Branch 4: Flashcards / SRS
+
+- [ ] SM-2 algorithm (`src/lib/srs/sm2.ts`)
+- [ ] Daily review queue — due cards only
+- [ ] Flashcard UI with flip animation
+- [ ] Review result POST → SM-2 update to `user_vocabulary`
+- [ ] Live end-to-end verification (blocked until environment allows *.supabase.co outbound)
 
 ---
 
 ## 📋 Backlog
-
-### Branch 3: Vocabulary DB
-- [ ] Add word from chat (one-click inline button)
-- [ ] Claude-powered definition enrichment (async, background)
-- [ ] Vocabulary list page with language filter
-- [ ] Word detail page / modal
-
-### Branch 4: Flashcards / SRS
-- [ ] SM-2 algorithm: `src/lib/srs/sm2.ts`
-- [ ] Daily review queue (due cards only)
-- [ ] Flashcard UI with flip animation
-- [ ] Review result POST → SM-2 update
 
 ### Branch 5: Voice
 - [ ] Browser STT integration (Web Speech API)
@@ -53,7 +66,7 @@
 
 ### Branch 8: Infrastructure
 - [ ] Vercel deployment + env vars
-- [ ] Custom domain (buy via Namecheap / Vercel)
+- [ ] Custom domain
 - [ ] Error monitoring (Sentry)
 - [ ] Analytics (Plausible or Posthog)
 - [ ] Stripe integration for Pro tier

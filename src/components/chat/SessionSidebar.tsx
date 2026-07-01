@@ -4,11 +4,13 @@ import { Plus } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 import { LANGUAGE_NAMES } from '@/lib/languages'
+import { SaveWordInput } from '@/components/vocabulary/SaveWordInput'
 import type { ChatSession } from '@/types'
 
 interface SessionSidebarProps {
   sessions: ChatSession[]
   activeSessionId: string | null
+  activeLanguageCode?: string
   onSelect: (session: ChatSession) => void
   onNew: () => void
   loading?: boolean
@@ -17,6 +19,7 @@ interface SessionSidebarProps {
 export function SessionSidebar({
   sessions,
   activeSessionId,
+  activeLanguageCode,
   onSelect,
   onNew,
   loading,
@@ -56,6 +59,12 @@ export function SessionSidebar({
           </button>
         ))}
       </div>
+
+      {activeLanguageCode && (
+        <div className="pt-3 mt-3 border-t border-stardust">
+          <SaveWordInput defaultLanguageCode={activeLanguageCode} compact />
+        </div>
+      )}
     </div>
   )
 }

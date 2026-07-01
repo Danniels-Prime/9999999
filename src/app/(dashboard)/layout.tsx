@@ -25,6 +25,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/chat" className="text-sm text-comet hover:text-starlight transition-colors">
             Chat
           </Link>
+          <Link href="/vocabulary" className="text-sm text-comet hover:text-starlight transition-colors">
+            Vocabulary
+          </Link>
           <span className="text-sm text-comet">{user.email}</span>
         </div>
       </nav>

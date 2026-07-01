@@ -13,9 +13,9 @@ const features = [
   {
     title: 'Vocabulary',
     description: 'Build and review your personal word bank with AI-powered definitions.',
-    status: 'Coming soon',
-    statusColor: 'text-comet',
-    href: null,
+    status: 'Open →',
+    statusColor: 'text-aurora-end',
+    href: '/vocabulary',
   },
   {
     title: 'Flashcards',

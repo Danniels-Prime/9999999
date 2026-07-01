@@ -162,6 +162,7 @@ export default function ChatPage() {
       <SessionSidebar
         sessions={sessions}
         activeSessionId={activeSession?.id ?? null}
+        activeLanguageCode={activeSession?.languageCode}
         onSelect={selectSession}
         onNew={() => setActiveSession(null)}
         loading={sessionsLoading}
